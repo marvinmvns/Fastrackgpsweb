@@ -1,0 +1,15 @@
+<?php
+	INCLUDE('configuration.php');
+	$cliente=$_REQUEST('user_id');
+	$mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS);
+	$mysqli->select_db(DB_NAME);
+	$result =$mysqli->query("select imei, name from bem where activated = 'S' and cliente = $cliente");
+	$result_array=array();
+	while($row = $result->fetch_array(MYSQLI_ASSOC)){
+		$result_array[]=$row;
+		
+	}
+	$array=array("status"=>"SUCCESS","message"=>"successfully logged in ","user_details"=>$result_array);
+	echo json_encode($array);
+	
+?>
