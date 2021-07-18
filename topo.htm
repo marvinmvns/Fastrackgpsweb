@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta http-equiv="Content-Language" content="en-us" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="robots" content="noindex,nofollow">
+<meta name="googlebot" content="noindex,nofollow">
+<meta name="robots" content="noarchive">
+
+<title>FasTrackGps - Rastreamento GPS</title>
+
+<script language="JavaScript">
+function moveRelogio(){
+    momentoAtual = new Date()
+    hora = momentoAtual.getHours()
+    minuto = momentoAtual.getMinutes()
+    //segundo = momentoAtual.getSeconds() --> descomente para mostrar segundos
+
+    /*str_segundo = new String (segundo)
+    if (str_segundo.length == 1)
+       segundo = "0" + segundo*/
+
+    str_minuto = new String (minuto)
+    if (str_minuto.length == 1)
+       minuto = "0" + minuto
+
+    str_hora = new String (hora)
+    if (str_hora.length == 1)
+       hora = "0" + hora
+
+    horaImprimivel = hora + "h" + minuto; //+ ":" + segundo
+
+    document.form_relogio.relogio.value = horaImprimivel
+
+    setTimeout("moveRelogio()",1000) 
+}
+</script>
+
+<base target="contents" />
+</head>
+
+<body onload="moveRelogio()">
+<div style="width:105%; height: 83px; background-position: bottom; margin-left:-10px; background-position: bottom; background-image:url('imagens/sombra_topo.png'); background-repeat: repeat-x;">
+	<div style="float:right; padding-right: 4%; text-align:right; width:107px">
+		<form name="form_relogio" style="font-family:Arial, Helvetica, sans-serif;">
+			<input style="padding-left:43px; border:0px; font-size: 20px; font-weight: bold; color: #CCCCCC;" type="text" name="relogio"/><br/>
+			
+			<!--a style="font-size:xx-small; color:#c0c0c0; text-decoration: none;" href="" target="_blank" title="Clique aqui para falar com o Suporte">
+				<img style="padding: 0pt 2px 0pt 0pt; margin: 0pt; border: medium none;" src="http://www.google.com/talk/service/resources/chaticon.gif" alt="" height="14" width="16">
+			</a-->
+			<a onclick="parent.contents.abrirHelp();" href="meus_dados.php" title="Altere seus dados cadastrados" target="main" style="font-size:xx-small; color:#c0c0c0; text-decoration: none;"> Meus dados</a>
+			<a href="logout.php" title="Sair do sistema - encerrar sessão" rel="nofollow" target="_top" style="font-size:xx-small; color:#c0c0c0; text-decoration: none;">| Sair</a>&nbsp;
+		</form>
+	</div>
+
+	<a href="default.php" rel="nofollow" target="_top"><img style="margin-left:15px; margin-top:-5px" src="imagens/topo1.png" alt="" title="" border="false" /></a>
+</div>
+</body>
+
+</html>

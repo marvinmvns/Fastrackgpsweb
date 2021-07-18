@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta name="robots" content="noindex,nofollow">
+<meta name="googlebot" content="noindex,nofollow">
+<meta name="robots" content="noarchive">
+
+<title>Erro Login - Rastreamento GPS - FastrackGPS</title>
+<style type="text/css" media="all">
+html, body {
+   height :100%;
+}
+body {
+	margin:0; 
+	padding:0;
+	font:75%/1.4 Verdana, Arial, Helvetica, sans-serif;
+	text-align:center;
+}
+#tudo { 
+	width:100%;
+	position:relative;  /*Contexto de posicionamento */
+	margin:0 auto;
+	text-align:left;
+	min-height:100%;/**/
+	}
+ * html #tudo {height: 100%;}
+
+#conteudo {
+	padding-bottom:30px;
+}
+#topo {
+	background-position: center center;
+	width: 100%;
+	height: 100px;
+	text-align: center;
+	padding-top: 6px;
+	background-image: url('imagens/topo_login.png');
+	background-repeat: no-repeat;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	border-bottom-color: #C0C0C0;
+}
+#topo2 {
+	background-position: center top;
+	width: 100%;
+	height: 25px;
+	text-align: center;
+	padding-top: 6px;
+	background-image: url('imagens/topo_login2.png');
+	background-repeat: repeat-x;
+}
+#principal {
+	background-position: center top;
+	width: 100%;
+	padding-left: 0px;
+	float: left;
+	padding-top: 5px;
+	text-align: center;
+	vertical-align: middle;
+	background-image: url('imagens/sombra_topo.png');
+	background-repeat: repeat-x;
+}
+#rodape {
+	background-position: center top;
+	width: 100%;
+	height: 68px;
+	position: absolute;
+	bottom: 0;
+	text-align: center;
+	font-family: Segoe UI,Arial,Verdana,Helvetica,sans-serif;
+	vertical-align: top;
+	background-repeat: no-repeat;
+}
+</style>
+</head>
+<body>
+	<div id="tudo">
+	
+		<div id="conteudo">
+			<div id="topo"></div>
+			<div id="topo2"></div>
+		
+			<div id="principal" align="center">
+			
+			<p style="height: 60px"></p>
+			<div id="fadeBlock" style="text-align:center;opacity: 1; display:block;">
+				<span style="font-size:8pt;color:#c0c0c0">Recomendamos <a href="http://br.mozdev.org/" target="_blank"><img src="http://www.mozilla.org/contribute/buttons/110x32arrow_b_pt.png" alt="Firefox" width="110" height="32" style="border-style:none;" title="Mozilla Firefox" /></a></span>
+			</div>
+			Área restrita aos usuários do Sistema de Rastreamento da FastrackGPS.<br />
+			Informe os dados abaixo:
+			<form method="post" action="usuario/account_login.php">
+			<table width="200px" align="center">
+				<tbody>
+					<tr>
+						<td colspan="2"><span style="color:red">Usuário ou Senha incorretos. Tente novamente.</span></td>
+					</tr>				
+					<tr>
+						<td>Login:</td>
+						<td><input id="auth_user" name="auth_user" type="text" /></td>
+					</tr>
+					<tr>
+						<td>Senha:</td>
+						<td><input id="auth_pw" name="auth_pw" type="password" /> </td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<input name="Button1" type="submit" value=" Entrar " onclick="if ((document.getElementById('auth_user').value == '') || (document.getElementById('auth_pw').value == '')) { alert('Login e Senha são de preenchimento obrigatório!'); return false } else { return true; } " />
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</form>
+			
+			</div>
+		</div>
+		
+		<div id="rodape"> 
+			<img src="imagens/divider.jpg" alt="" title="" />
+			<br />
+			© 2012 www.FastrackGPS.com.br &nbsp;&nbsp;&nbsp; 
+			Todos os Direitos Reservados &nbsp;&nbsp;&nbsp; 
+			Rastreamento Inteligente &nbsp;&nbsp;&nbsp;
+			atendimento@FastrackGPS.net &nbsp;&nbsp;&nbsp; 
+			São Paulo - SP  - Brasil &nbsp;&nbsp;&nbsp; 
+		</div>
+	</div>
+</body>
+</html>
