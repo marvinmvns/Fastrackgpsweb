@@ -1,0 +1,11 @@
+parameters:
+    level: 8
+    paths:
+        - src
+    excludePaths:
+        - src/Legacy
+    ignoreErrors:
+        # Legacy code baseline - remove these as we refactor
+        - '#Function mysql_.*\(\) is deprecated#'
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false

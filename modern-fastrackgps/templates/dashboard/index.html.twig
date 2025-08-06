@@ -1,0 +1,324 @@
+{% extends "layout/base.html.twig" %}
+
+{% block title %}Dashboard - {{ parent() }}{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active">Dashboard</li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Statistics Cards -->
+    <div class="col-md-3 mb-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title">Total de Veículos</h6>
+                        <h2 class="mb-0">{{ statistics.total_vehicles ?? 0 }}</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-car fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-4">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title">Veículos Online</h6>
+                        <h2 class="mb-0">{{ statistics.online_vehicles ?? 0 }}</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-wifi fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-4">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title">Alertas Pendentes</h6>
+                        <h2 class="mb-0">{{ statistics.pending_alerts ?? 0 }}</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-exclamation-triangle fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-4">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title">Cercas Ativas</h6>
+                        <h2 class="mb-0">{{ statistics.active_geofences ?? 0 }}</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-draw-polygon fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Real-time Map -->
+    <div class="col-lg-8 mb-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-map-marked-alt me-2"></i>
+                    Mapa em Tempo Real
+                </h5>
+                <div class="btn-group btn-group-sm" role="group">
+                    <button type="button" class="btn btn-outline-primary" onclick="refreshMap()">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-primary" onclick="toggleAutoRefresh()">
+                        <i class="fas fa-play"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div id="realtime-map" style="height: 500px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activities -->
+    <div class="col-lg-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-clock me-2"></i>
+                    Atividades Recentes
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    {% if recent_activities is defined %}
+                        {% for activity in recent_activities %}
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">
+                                        <i class="fas {{ activity.icon }} me-2 text-{{ activity.color }}"></i>
+                                        {{ activity.title }}
+                                    </h6>
+                                    <small>{{ format_date(activity.created_at, 'H:i') }}</small>
+                                </div>
+                                <p class="mb-1">{{ activity.description }}</p>
+                                <small class="text-muted">{{ activity.vehicle_name ?? '' }}</small>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="list-group-item text-center py-4">
+                            <i class="fas fa-info-circle fa-2x text-muted mb-2"></i>
+                            <p class="mb-0 text-muted">Nenhuma atividade recente</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Quick Actions -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-bolt me-2"></i>
+                    Ações Rápidas
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-2">
+                    <div class="col-6">
+                        <a href="{{ url('/vehicles/create') }}" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-plus-circle mb-2"></i><br>
+                            Adicionar Veículo
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <a href="{{ url('/geofences/create') }}" class="btn btn-outline-success w-100">
+                            <i class="fas fa-draw-polygon mb-2"></i><br>
+                            Nova Cerca Virtual
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <a href="{{ url('/commands/create') }}" class="btn btn-outline-warning w-100">
+                            <i class="fas fa-terminal mb-2"></i><br>
+                            Enviar Comando
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <a href="{{ url('/alerts') }}" class="btn btn-outline-danger w-100">
+                            <i class="fas fa-exclamation-triangle mb-2"></i><br>
+                            Ver Alertas
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Status -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-server me-2"></i>
+                    Status do Sistema
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="text-center">
+                            <i class="fas fa-circle text-success fa-2x mb-2"></i>
+                            <h6>GPS Service</h6>
+                            <small class="text-success">Online</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-center">
+                            <i class="fas fa-circle text-success fa-2x mb-2"></i>
+                            <h6>Database</h6>
+                            <small class="text-success">Conectado</small>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="text-center">
+                            <i class="fas fa-circle text-warning fa-2x mb-2"></i>
+                            <h6>Alerts</h6>
+                            <small class="text-warning">{{ statistics.pending_alerts ?? 0 }} Pendentes</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-center">
+                            <i class="fas fa-circle text-info fa-2x mb-2"></i>
+                            <h6>Commands</h6>
+                            <small class="text-info">{{ statistics.pending_commands ?? 0 }} Pendentes</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+// Initialize real-time map
+let map;
+let vehicleMarkers = {};
+let autoRefreshInterval;
+
+document.addEventListener('DOMContentLoaded', function() {
+    initializeMap();
+    loadVehicles();
+});
+
+function initializeMap() {
+    map = L.map('realtime-map').setView([-23.5505, -46.6333], 10); // São Paulo default
+    
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+}
+
+function loadVehicles() {
+    fetch('/api/vehicles')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                updateVehicleMarkers(data.vehicles);
+            }
+        })
+        .catch(error => console.error('Error loading vehicles:', error));
+}
+
+function updateVehicleMarkers(vehicles) {
+    // Clear existing markers
+    Object.values(vehicleMarkers).forEach(marker => map.removeLayer(marker));
+    vehicleMarkers = {};
+    
+    vehicles.forEach(vehicle => {
+        if (vehicle.last_position) {
+            const marker = L.marker([
+                vehicle.last_position.latitude,
+                vehicle.last_position.longitude
+            ]).addTo(map);
+            
+            marker.bindPopup(`
+                <strong>${vehicle.name}</strong><br>
+                IMEI: ${vehicle.imei}<br>
+                Status: <span class="badge bg-${vehicle.is_online ? 'success' : 'danger'}">${vehicle.is_online ? 'Online' : 'Offline'}</span><br>
+                Velocidade: ${vehicle.last_position.speed} km/h<br>
+                Última atualização: ${new Date(vehicle.last_position.timestamp).toLocaleString()}
+            `);
+            
+            vehicleMarkers[vehicle.id] = marker;
+        }
+    });
+    
+    // Fit map to show all markers
+    if (Object.keys(vehicleMarkers).length > 0) {
+        const group = new L.featureGroup(Object.values(vehicleMarkers));
+        map.fitBounds(group.getBounds().pad(0.1));
+    }
+}
+
+function refreshMap() {
+    loadVehicles();
+    
+    // Show refresh feedback
+    const btn = event.target.closest('button');
+    const icon = btn.querySelector('i');
+    icon.classList.add('fa-spin');
+    setTimeout(() => icon.classList.remove('fa-spin'), 1000);
+}
+
+function toggleAutoRefresh() {
+    const btn = event.target.closest('button');
+    const icon = btn.querySelector('i');
+    
+    if (autoRefreshInterval) {
+        clearInterval(autoRefreshInterval);
+        autoRefreshInterval = null;
+        icon.classList.remove('fa-pause');
+        icon.classList.add('fa-play');
+        btn.classList.remove('btn-primary');
+        btn.classList.add('btn-outline-primary');
+    } else {
+        autoRefreshInterval = setInterval(loadVehicles, 30000); // 30 seconds
+        icon.classList.remove('fa-play');
+        icon.classList.add('fa-pause');
+        btn.classList.remove('btn-outline-primary');
+        btn.classList.add('btn-primary');
+    }
+}
+</script>
+{% endblock %}

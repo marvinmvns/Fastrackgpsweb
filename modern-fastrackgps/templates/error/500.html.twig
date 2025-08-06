@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erro interno - {{ app_name }}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #dc3545 0%, #6f42c1 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .error-container {
+            text-align: center;
+            color: white;
+        }
+        
+        .error-code {
+            font-size: 8rem;
+            font-weight: 900;
+            line-height: 1;
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .error-icon {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+            animation: shake 2s infinite;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+        
+        .error-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .error-message {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .btn-home {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            border-radius: 50px;
+            padding: 12px 30px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .btn-home:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .error-details {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            backdrop-filter: blur(10px);
+        }
+        
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .floating-element {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Background Elements -->
+    <div class="floating-elements">
+        <i class="fas fa-exclamation-triangle floating-element" style="top: 15%; left: 10%; font-size: 3rem; animation-delay: 0s;"></i>
+        <i class="fas fa-bug floating-element" style="top: 25%; right: 15%; font-size: 2rem; animation-delay: 1s;"></i>
+        <i class="fas fa-tools floating-element" style="bottom: 35%; left: 20%; font-size: 2.5rem; animation-delay: 2s;"></i>
+        <i class="fas fa-cog floating-element" style="bottom: 25%; right: 10%; font-size: 2rem; animation-delay: 3s;"></i>
+        <i class="fas fa-wrench floating-element" style="top: 65%; right: 8%; font-size: 3rem; animation-delay: 4s;"></i>
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="error-container">
+                    <!-- Error Icon -->
+                    <div class="error-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    
+                    <!-- Error Code -->
+                    <div class="error-code">500</div>
+                    
+                    <!-- Error Title -->
+                    <h1 class="error-title">Erro Interno do Servidor</h1>
+                    
+                    <!-- Error Message -->
+                    <p class="error-message">
+                        Oops! Algo deu errado em nossos servidores.<br>
+                        Nossos técnicos já foram notificados e estão trabalhando para resolver o problema.
+                    </p>
+                    
+                    <!-- Error Details (only show in development) -->
+                    {% if error is defined and app.debug is defined and app.debug %}
+                        <div class="error-details text-start">
+                            <h6><i class="fas fa-code me-2"></i>Detalhes Técnicos:</h6>
+                            <pre class="small text-white-50 mb-0">{{ error }}</pre>
+                        </div>
+                    {% endif %}
+                    
+                    <!-- Actions -->
+                    <div class="mb-4">
+                        <a href="{{ url('/dashboard') }}" class="btn-home me-3">
+                            <i class="fas fa-home me-2"></i>
+                            Voltar ao Dashboard
+                        </a>
+                        <a href="javascript:location.reload()" class="btn-home">
+                            <i class="fas fa-redo me-2"></i>
+                            Tentar Novamente
+                        </a>
+                    </div>
+                    
+                    <!-- Status Information -->
+                    <div class="mt-5">
+                        <h5>Status do Sistema</h5>
+                        <div class="row justify-content-center mt-3">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-6 mb-3">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <i class="fas fa-database fa-2x me-2"></i>
+                                            <div>
+                                                <small>Banco de Dados</small><br>
+                                                <span class="badge bg-warning">Verificando...</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <i class="fas fa-server fa-2x me-2"></i>
+                                            <div>
+                                                <small>Servidor</small><br>
+                                                <span class="badge bg-danger">Erro</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Help Section -->
+                    <div class="mt-5">
+                        <h6>O que posso fazer?</h6>
+                        <div class="row justify-content-center">
+                            <div class="col-md-8">
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">
+                                        <i class="fas fa-check-circle me-2"></i>
+                                        Aguarde alguns minutos e tente novamente
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="fas fa-check-circle me-2"></i>
+                                        Verifique sua conexão com a internet
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="fas fa-check-circle me-2"></i>
+                                        Entre em contato com o suporte se o problema persistir
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="position-fixed bottom-0 start-50 translate-middle-x mb-3">
+        <small class="text-white opacity-75">
+            © {{ "now"|date("Y") }} {{ app_name }} - Erro ID: {{ random() }}
+        </small>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Auto-retry after 60 seconds
+        let retryCountdown = 60;
+        const retryMessage = document.createElement('div');
+        retryMessage.className = 'mt-4 text-white opacity-75';
+        retryMessage.innerHTML = `<small>Tentativa automática em <span id="retry-countdown">${retryCountdown}</span> segundos...</small>`;
+        document.querySelector('.error-container').appendChild(retryMessage);
+        
+        const retryCountdownElement = document.getElementById('retry-countdown');
+        const retryInterval = setInterval(() => {
+            retryCountdown--;
+            retryCountdownElement.textContent = retryCountdown;
+            
+            if (retryCountdown <= 0) {
+                clearInterval(retryInterval);
+                location.reload();
+            }
+        }, 1000);
+        
+        // Cancel auto-retry if user interacts with the page
+        document.addEventListener('click', () => {
+            clearInterval(retryInterval);
+            retryMessage.style.display = 'none';
+        });
+        
+        // Simple system status check
+        setTimeout(() => {
+            const badges = document.querySelectorAll('.badge.bg-warning');
+            badges.forEach(badge => {
+                // Simulate status check
+                const isOnline = Math.random() > 0.5;
+                badge.className = `badge bg-${isOnline ? 'success' : 'danger'}`;
+                badge.textContent = isOnline ? 'Online' : 'Offline';
+            });
+        }, 2000);
+    </script>
+</body>
+</html>

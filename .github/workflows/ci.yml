@@ -1,0 +1,96 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  quality-checks:
+    name: Code Quality & Tests
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        php-version: ['8.1', '8.2', '8.3']
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql, curl
+          coverage: xdebug
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ matrix.php-version }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-${{ matrix.php-version }}-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Check code style (PSR-12)
+        run: composer run cs-check
+
+      - name: Run static analysis (PHPStan)
+        run: composer run phpstan
+
+      - name: Run unit tests
+        run: composer run test
+
+      - name: Run tests with coverage
+        run: composer run test-coverage
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Security audit
+        run: composer audit
+
+  rector-check:
+    name: Rector Dry Run
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Check Rector suggestions
+        run: composer run rector

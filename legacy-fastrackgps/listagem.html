@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"/>
+<meta name="robots" content="noindex,nofollow">
+<meta name="googlebot" content="noindex,nofollow">
+<meta name="robots" content="noarchive">
+
+<title>Grid Registros</title>
+<script type="text/javascript" src="../shared-modules/assets/js/listagemAjax.js"></script>
+<style type="text/css">
+
+body {
+	background: #fff;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:8pt;
+}
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+	margin-left: -1px;
+	margin-top:-10px;
+	font-size: 1.1em;
+}
+
+th {
+	background: #8EB7DF;
+	color: #fff;
+	font-weight: bold;
+	padding: 4px 11px;
+	text-align: left;
+	border-right: 1px solid #fff;
+	line-height: 1.2;
+}
+
+td {
+	padding: 3px 11px;
+	border-bottom: 1px solid #95bce2;
+	vertical-align: top;
+}
+
+td * {
+	padding: 6px 11px;
+}
+
+tr.alt td {
+	background: #ecf6fc;
+}
+
+tr.over td {
+	background: #bcd4ec;
+}
+
+.botaoBranco {
+	background-color:#FFFFFF;
+	border:1px solid #999999;
+	color:#333333;
+	font-family:Verdana;
+	font-size:7pt;
+	font-style:normal;
+	font-weight:normal;
+	text-decoration:none;
+	padding:1px;
+}
+
+</style>
+<base target="contents" />
+</head>
+<body onload="bindGrid(document.getElementById('nrImeiLista').value)">
+<input type="hidden" id="nrImeiLista" name="imei" value="" />
+<div id="divListagem">
+	<table class="stripeMe">
+		<thead>
+			<tr class="alt">
+				<th>Data</th>
+				<th>Hora</th>
+				<th>Latitude</th>
+				<th>Longitude</th>
+				<th>Velocidade</th>
+				<th>Local</th>
+				<th>Ver Mapa</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr class="">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td><input type="submit" value="Ver" class="botaoBranco" onclick="" /></td>
+			</tr>
+			<tr class="alt">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td><input type="submit" value="Ver" class="botaoBranco" onclick="" /></td>
+			</tr>
+			<tr class="">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td><input type="submit" value="Ver" class="botaoBranco" onclick="" /></td>
+			</tr>
+			<tr class="alt">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td><input type="submit" value="Ver" class="botaoBranco" onclick="" /></td>
+			</tr>
+			<tr class="">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td><input type="submit" value="Ver" class="botaoBranco" onclick="" /></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+</body>
+</html>

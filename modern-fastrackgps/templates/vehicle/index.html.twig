@@ -1,0 +1,277 @@
+{% extends "layout/base.html.twig" %}
+
+{% block title %}Veículos - {{ parent() }}{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url('/dashboard') }}">Dashboard</a></li>
+        <li class="breadcrumb-item active">Veículos</li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>
+        <i class="fas fa-car me-2"></i>
+        Meus Veículos
+        <span class="badge bg-primary ms-2">{{ vehicles|length }}</span>
+    </h1>
+    
+    {% if user.isAdmin %}
+        <a href="{{ url('/vehicles/create') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Adicionar Veículo
+        </a>
+    {% endif %}
+</div>
+
+<!-- Filters -->
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">Status</label>
+                <select class="form-select" id="filter-status">
+                    <option value="">Todos os Status</option>
+                    <option value="online">Online</option>
+                    <option value="offline">Offline</option>
+                    <option value="active">Ativo</option>
+                    <option value="inactive">Inativo</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Buscar</label>
+                <input type="text" class="form-control" id="search-input" placeholder="Nome, IMEI ou identificação...">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">&nbsp;</label>
+                <div class="d-grid">
+                    <button type="button" class="btn btn-outline-secondary" onclick="clearFilters()">
+                        <i class="fas fa-times"></i> Limpar Filtros
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Vehicles Grid -->
+<div class="row" id="vehicles-container">
+    {% for vehicle in vehicles %}
+        <div class="col-lg-4 col-md-6 mb-4 vehicle-card" 
+             data-status="{{ vehicle.is_online ? 'online' : 'offline' }}"
+             data-active="{{ vehicle.is_active ? 'active' : 'inactive' }}"
+             data-search="{{ vehicle.name|lower }} {{ vehicle.imei|lower }} {{ vehicle.identification|lower }}">
+            
+            <div class="card h-100">
+                <!-- Status Indicator -->
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">
+                        <i class="fas fa-car me-2"></i>
+                        {{ vehicle.name }}
+                    </h6>
+                    <span class="badge bg-{{ vehicle.is_online ? 'success' : 'danger' }}">
+                        <i class="fas fa-circle me-1"></i>
+                        {{ vehicle.is_online ? 'Online' : 'Offline' }}
+                    </span>
+                </div>
+
+                <div class="card-body">
+                    <!-- Vehicle Info -->
+                    <div class="row mb-3">
+                        <div class="col-sm-6">
+                            <small class="text-muted">IMEI:</small><br>
+                            <strong>{{ vehicle.imei }}</strong>
+                        </div>
+                        <div class="col-sm-6">
+                            <small class="text-muted">Identificação:</small><br>
+                            <strong>{{ vehicle.identification }}</strong>
+                        </div>
+                    </div>
+
+                    <!-- Status Info -->
+                    <div class="row mb-3">
+                        <div class="col-sm-6">
+                            <small class="text-muted">Status:</small><br>
+                            <span class="badge" style="background-color: {{ vehicle.status.color }}">
+                                {{ vehicle.status.name }}
+                            </span>
+                        </div>
+                        <div class="col-sm-6">
+                            <small class="text-muted">Operação:</small><br>
+                            <span class="text-muted">{{ vehicle.operating_mode.name }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Last Position -->
+                    {% if vehicle.last_position %}
+                        <div class="mb-3">
+                            <small class="text-muted">Última Posição:</small><br>
+                            <i class="fas fa-map-marker-alt text-primary me-1"></i>
+                            {{ format_coordinates(vehicle.last_position.latitude, vehicle.last_position.longitude) }}
+                            <br>
+                            <small class="text-muted">
+                                {{ format_date(vehicle.last_position_time) }}
+                            </small>
+                        </div>
+                    {% else %}
+                        <div class="mb-3 text-center text-muted">
+                            <i class="fas fa-map-marker-alt fa-2x mb-2"></i><br>
+                            Posição não disponível
+                        </div>
+                    {% endif %}
+
+                    <!-- Chip Info -->
+                    <div class="row">
+                        <div class="col-12">
+                            <small class="text-muted">Chip Principal:</small><br>
+                            <i class="fas fa-sim-card me-1"></i>
+                            {{ vehicle.formatted_chip }} ({{ vehicle.carrier.name }})
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="card-footer">
+                    <div class="btn-group w-100" role="group">
+                        <a href="{{ url('/vehicles/' ~ vehicle.id) }}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="{{ url('/vehicles/' ~ vehicle.id ~ '/tracking') }}" class="btn btn-outline-success btn-sm">
+                            <i class="fas fa-route"></i>
+                        </a>
+                        <a href="{{ url('/alerts?vehicle_id=' ~ vehicle.id) }}" class="btn btn-outline-warning btn-sm">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </a>
+                        {% if user.isAdmin or vehicle.client_id == user.id %}
+                            <a href="{{ url('/vehicles/' ~ vehicle.id ~ '/edit') }}" class="btn btn-outline-secondary btn-sm">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-car fa-4x text-muted mb-3"></i>
+                    <h4 class="text-muted">Nenhum veículo encontrado</h4>
+                    <p class="text-muted">Você ainda não possui veículos cadastrados.</p>
+                    {% if user.isAdmin %}
+                        <a href="{{ url('/vehicles/create') }}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Adicionar Primeiro Veículo
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<!-- No Results Message -->
+<div id="no-results-message" class="col-12" style="display: none;">
+    <div class="card">
+        <div class="card-body text-center py-5">
+            <i class="fas fa-search fa-4x text-muted mb-3"></i>
+            <h4 class="text-muted">Nenhum resultado encontrado</h4>
+            <p class="text-muted">Tente ajustar os filtros de busca.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search-input');
+    const statusFilter = document.getElementById('filter-status');
+    const vehicleCards = document.querySelectorAll('.vehicle-card');
+    const noResultsMessage = document.getElementById('no-results-message');
+
+    function filterVehicles() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const statusValue = statusFilter.value;
+        let visibleCount = 0;
+
+        vehicleCards.forEach(card => {
+            const searchData = card.dataset.search;
+            const cardStatus = card.dataset.status;
+            const cardActive = card.dataset.active;
+            
+            let showCard = true;
+
+            // Search filter
+            if (searchTerm && !searchData.includes(searchTerm)) {
+                showCard = false;
+            }
+
+            // Status filter
+            if (statusValue) {
+                if (statusValue === 'online' && cardStatus !== 'online') {
+                    showCard = false;
+                } else if (statusValue === 'offline' && cardStatus !== 'offline') {
+                    showCard = false;
+                } else if (statusValue === 'active' && cardActive !== 'active') {
+                    showCard = false;
+                } else if (statusValue === 'inactive' && cardActive !== 'inactive') {
+                    showCard = false;
+                }
+            }
+
+            card.style.display = showCard ? 'block' : 'none';
+            if (showCard) visibleCount++;
+        });
+
+        // Show/hide no results message
+        noResultsMessage.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+
+    // Event listeners
+    searchInput.addEventListener('input', filterVehicles);
+    statusFilter.addEventListener('change', filterVehicles);
+
+    // Auto-refresh vehicle status every 30 seconds
+    setInterval(function() {
+        if (document.hidden) return; // Don't refresh if tab is not visible
+        
+        fetch('/api/vehicles')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    updateVehicleStatus(data.vehicles);
+                }
+            })
+            .catch(error => console.error('Error refreshing vehicles:', error));
+    }, 30000);
+});
+
+function updateVehicleStatus(vehicles) {
+    vehicles.forEach(vehicle => {
+        const card = document.querySelector(`[data-vehicle-id="${vehicle.id}"]`);
+        if (card) {
+            const statusBadge = card.querySelector('.badge');
+            const isOnline = vehicle.is_online;
+            
+            statusBadge.className = `badge bg-${isOnline ? 'success' : 'danger'}`;
+            statusBadge.innerHTML = `<i class="fas fa-circle me-1"></i>${isOnline ? 'Online' : 'Offline'}`;
+            
+            card.dataset.status = isOnline ? 'online' : 'offline';
+        }
+    });
+}
+
+function clearFilters() {
+    document.getElementById('search-input').value = '';
+    document.getElementById('filter-status').value = '';
+    
+    document.querySelectorAll('.vehicle-card').forEach(card => {
+        card.style.display = 'block';
+    });
+    
+    document.getElementById('no-results-message').style.display = 'none';
+}
+</script>
+{% endblock %}

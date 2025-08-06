@@ -1,0 +1,61 @@
+{
+    "name": "fastrackgps/tracking-system",
+    "description": "Modern GPS tracking system built with PHP 8+",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": ">=8.1",
+        "ext-pdo": "*",
+        "ext-json": "*",
+        "ext-curl": "*",
+        "monolog/monolog": "^3.0",
+        "vlucas/phpdotenv": "^5.0",
+        "ramsey/uuid": "^4.0",
+        "symfony/http-foundation": "^6.0",
+        "twig/twig": "^3.0",
+        "doctrine/dbal": "^3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0",
+        "phpstan/phpstan": "^1.10",
+        "friendsofphp/php-cs-fixer": "^3.0",
+        "rector/rector": "^0.18",
+        "pestphp/pest": "^2.0",
+        "fakerphp/faker": "^1.20"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/",
+            "FastrackGps\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "test-coverage": "phpunit --coverage-html coverage",
+        "phpstan": "phpstan analyse",
+        "cs-fix": "php-cs-fixer fix",
+        "cs-check": "php-cs-fixer fix --dry-run --diff",
+        "rector": "rector process --dry-run",
+        "rector-fix": "rector process",
+        "quality": [
+            "@cs-check",
+            "@phpstan",
+            "@test"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

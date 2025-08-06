@@ -1,0 +1,249 @@
+/**
+ * CSS Compartilhado entre sistemas Legacy e Moderno
+ * Use classes com prefixo .shared- para evitar conflitos
+ */
+
+/* Variáveis CSS globais */
+:root {
+    --shared-primary-color: #007bff;
+    --shared-secondary-color: #6c757d;
+    --shared-success-color: #28a745;
+    --shared-danger-color: #dc3545;
+    --shared-warning-color: #ffc107;
+    --shared-info-color: #17a2b8;
+    
+    --shared-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --shared-font-size-base: 14px;
+    --shared-line-height: 1.5;
+    
+    --shared-border-radius: 4px;
+    --shared-box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    --shared-transition: all 0.3s ease;
+}
+
+/* Reset básico compartilhado */
+.shared-reset {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Layout comum */
+.shared-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.shared-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -15px;
+}
+
+.shared-col {
+    flex: 1;
+    padding: 0 15px;
+}
+
+/* Botões compartilhados */
+.shared-btn {
+    display: inline-block;
+    padding: 8px 16px;
+    font-family: var(--shared-font-family);
+    font-size: var(--shared-font-size-base);
+    font-weight: 400;
+    line-height: var(--shared-line-height);
+    text-align: center;
+    text-decoration: none;
+    border: 1px solid transparent;
+    border-radius: var(--shared-border-radius);
+    cursor: pointer;
+    transition: var(--shared-transition);
+}
+
+.shared-btn-primary {
+    background-color: var(--shared-primary-color);
+    color: white;
+    border-color: var(--shared-primary-color);
+}
+
+.shared-btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.shared-btn-secondary {
+    background-color: var(--shared-secondary-color);
+    color: white;
+    border-color: var(--shared-secondary-color);
+}
+
+.shared-btn-success {
+    background-color: var(--shared-success-color);
+    color: white;
+    border-color: var(--shared-success-color);
+}
+
+.shared-btn-danger {
+    background-color: var(--shared-danger-color);
+    color: white;
+    border-color: var(--shared-danger-color);
+}
+
+/* Cards compartilhados */
+.shared-card {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: var(--shared-border-radius);
+    box-shadow: var(--shared-box-shadow);
+    margin-bottom: 20px;
+}
+
+.shared-card-header {
+    padding: 15px;
+    border-bottom: 1px solid #e9ecef;
+    font-weight: 600;
+}
+
+.shared-card-body {
+    padding: 15px;
+}
+
+/* Alertas compartilhados */
+.shared-alert {
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    border: 1px solid transparent;
+    border-radius: var(--shared-border-radius);
+}
+
+.shared-alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+.shared-alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+.shared-alert-warning {
+    background-color: #fff3cd;
+    border-color: #ffeaa7;
+    color: #856404;
+}
+
+.shared-alert-info {
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+    color: #0c5460;
+}
+
+/* Tabelas compartilhadas */
+.shared-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.shared-table th,
+.shared-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.shared-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.shared-table-striped tbody tr:nth-child(odd) {
+    background-color: #f8f9fa;
+}
+
+/* Formulários compartilhados */
+.shared-form-group {
+    margin-bottom: 15px;
+}
+
+.shared-form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.shared-form-control {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: var(--shared-font-size-base);
+    border: 1px solid #ced4da;
+    border-radius: var(--shared-border-radius);
+    transition: var(--shared-transition);
+}
+
+.shared-form-control:focus {
+    outline: 0;
+    border-color: var(--shared-primary-color);
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* Utilitários compartilhados */
+.shared-text-center { text-align: center; }
+.shared-text-left { text-align: left; }
+.shared-text-right { text-align: right; }
+
+.shared-text-primary { color: var(--shared-primary-color); }
+.shared-text-success { color: var(--shared-success-color); }
+.shared-text-danger { color: var(--shared-danger-color); }
+.shared-text-warning { color: var(--shared-warning-color); }
+
+.shared-bg-primary { background-color: var(--shared-primary-color); }
+.shared-bg-light { background-color: #f8f9fa; }
+.shared-bg-dark { background-color: #343a40; }
+
+.shared-mb-0 { margin-bottom: 0; }
+.shared-mb-1 { margin-bottom: 5px; }
+.shared-mb-2 { margin-bottom: 10px; }
+.shared-mb-3 { margin-bottom: 15px; }
+.shared-mb-4 { margin-bottom: 20px; }
+
+.shared-mt-0 { margin-top: 0; }
+.shared-mt-1 { margin-top: 5px; }
+.shared-mt-2 { margin-top: 10px; }
+.shared-mt-3 { margin-top: 15px; }
+.shared-mt-4 { margin-top: 20px; }
+
+.shared-p-0 { padding: 0; }
+.shared-p-1 { padding: 5px; }
+.shared-p-2 { padding: 10px; }
+.shared-p-3 { padding: 15px; }
+.shared-p-4 { padding: 20px; }
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .shared-container {
+        padding: 0 10px;
+    }
+    
+    .shared-row {
+        margin: 0 -10px;
+    }
+    
+    .shared-col {
+        padding: 0 10px;
+        flex: 100%;
+    }
+    
+    .shared-table {
+        font-size: 12px;
+    }
+    
+    .shared-table th,
+    .shared-table td {
+        padding: 8px;
+    }
+}

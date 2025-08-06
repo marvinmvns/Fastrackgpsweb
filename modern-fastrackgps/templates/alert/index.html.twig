@@ -1,0 +1,306 @@
+{% extends "layout/base.html.twig" %}
+
+{% block title %}Alertas - {{ parent() }}{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url('/dashboard') }}">Dashboard</a></li>
+        <li class="breadcrumb-item active">Alertas</li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        Alertas
+        {% if unacknowledged_count is defined and unacknowledged_count > 0 %}
+            <span class="badge bg-danger ms-2">{{ unacknowledged_count }} Pendentes</span>
+        {% endif %}
+    </h1>
+    
+    <div class="btn-group">
+        {% if unacknowledged_count is defined and unacknowledged_count > 0 %}
+            <form action="{{ url('/alerts/acknowledge-all') }}" method="POST" class="d-inline" onsubmit="return confirm('Marcar todos os alertas como reconhecidos?')">
+                <input type="hidden" name="_token" value="{{ csrf_token('acknowledge_all_alerts') }}">
+                <button type="submit" class="btn btn-outline-success">
+                    <i class="fas fa-check-double"></i> Reconhecer Todos
+                </button>
+            </form>
+        {% endif %}
+        <a href="{{ url('/alerts/statistics') }}" class="btn btn-outline-info">
+            <i class="fas fa-chart-bar"></i> Estatísticas
+        </a>
+    </div>
+</div>
+
+<!-- Filter Controls -->
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">Tipo</label>
+                <select class="form-select" id="filter-type">
+                    <option value="">Todos os Tipos</option>
+                    <option value="speeding">Excesso de Velocidade</option>
+                    <option value="geofence_enter">Entrada em Cerca</option>
+                    <option value="geofence_exit">Saída de Cerca</option>
+                    <option value="panic_button">Botão de Pânico</option>
+                    <option value="low_battery">Bateria Baixa</option>
+                    <option value="offline">Veículo Offline</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Gravidade</label>
+                <select class="form-select" id="filter-severity">
+                    <option value="">Todas as Gravidades</option>
+                    <option value="critical">Crítico</option>
+                    <option value="high">Alto</option>
+                    <option value="medium">Médio</option>
+                    <option value="low">Baixo</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Status</label>
+                <select class="form-select" id="filter-status">
+                    <option value="">Todos</option>
+                    <option value="unacknowledged">Não Reconhecidos</option>
+                    <option value="acknowledged">Reconhecidos</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">&nbsp;</label>
+                <div class="d-grid">
+                    <button type="button" class="btn btn-outline-secondary" onclick="clearFilters()">
+                        <i class="fas fa-times"></i> Limpar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Alerts List -->
+<div class="row" id="alerts-container">
+    {% for alert in alerts %}
+        <div class="col-12 mb-3 alert-item" 
+             data-type="{{ alert.type.value }}"
+             data-severity="{{ alert.severity.value }}"
+             data-status="{{ alert.is_acknowledged ? 'acknowledged' : 'unacknowledged' }}">
+            
+            <div class="card alert-card alert-{{ alert.severity.value }}">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <!-- Alert Icon & Info -->
+                        <div class="col-md-8">
+                            <div class="d-flex align-items-start">
+                                <div class="me-3">
+                                    <i class="fas {{ alert.type.icon }} fa-2x text-{{ alert.severity.value == 'critical' ? 'danger' : (alert.severity.value == 'high' ? 'warning' : (alert.severity.value == 'medium' ? 'info' : 'secondary')) }}"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5 class="card-title mb-2">
+                                        {{ alert.title }}
+                                        <span class="badge ms-2" style="background-color: {{ alert.severity.color }}">
+                                            {{ alert.severity.displayName }}
+                                        </span>
+                                    </h5>
+                                    <p class="card-text mb-2">{{ alert.message }}</p>
+                                    <div class="row text-muted">
+                                        <div class="col-sm-6">
+                                            <small>
+                                                <i class="fas fa-car me-1"></i>
+                                                Veículo ID: {{ alert.vehicle_id }}
+                                            </small>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <small>
+                                                <i class="fas fa-clock me-1"></i>
+                                                {{ format_date(alert.created_at) }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Status & Actions -->
+                        <div class="col-md-4 text-md-end">
+                            <div class="mb-2">
+                                {% if alert.is_acknowledged %}
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-check me-1"></i>
+                                        Reconhecido
+                                    </span>
+                                    <br>
+                                    <small class="text-muted">
+                                        {{ format_date(alert.acknowledged_at) }}
+                                    </small>
+                                {% else %}
+                                    <span class="badge bg-danger">
+                                        <i class="fas fa-exclamation me-1"></i>
+                                        Pendente
+                                    </span>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="btn-group btn-group-sm">
+                                <a href="{{ url('/alerts/' ~ alert.id) }}" class="btn btn-outline-primary">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                
+                                {% if not alert.is_acknowledged %}
+                                    <form action="{{ url('/alerts/' ~ alert.id ~ '/acknowledge') }}" method="POST" class="d-inline">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('acknowledge_alert') }}">
+                                        <button type="submit" class="btn btn-outline-success" title="Reconhecer">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    </form>
+                                {% endif %}
+                                
+                                {% if user.isAdmin %}
+                                    <form action="{{ url('/alerts/' ~ alert.id ~ '/delete') }}" method="POST" class="d-inline" onsubmit="return confirm('Excluir este alerta?')">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete_alert') }}">
+                                        <button type="submit" class="btn btn-outline-danger" title="Excluir">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Additional Alert Data -->
+                    {% if alert.data %}
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <div class="alert alert-light p-2">
+                                    <small class="text-muted">
+                                        <strong>Dados Adicionais:</strong>
+                                        {% if alert.data.coordinates is defined %}
+                                            <span class="me-3">
+                                                <i class="fas fa-map-marker-alt"></i>
+                                                {{ format_coordinates(alert.data.coordinates.latitude, alert.data.coordinates.longitude) }}
+                                            </span>
+                                        {% endif %}
+                                        {% if alert.data.speed is defined %}
+                                            <span class="me-3">
+                                                <i class="fas fa-tachometer-alt"></i>
+                                                {{ alert.data.speed }} km/h
+                                            </span>
+                                        {% endif %}
+                                        {% if alert.data.address is defined %}
+                                            <span class="me-3">
+                                                <i class="fas fa-location-dot"></i>
+                                                {{ alert.data.address }}
+                                            </span>
+                                        {% endif %}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-bell-slash fa-4x text-muted mb-3"></i>
+                    <h4 class="text-muted">Nenhum alerta encontrado</h4>
+                    <p class="text-muted">Não há alertas para exibir no momento.</p>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<!-- No Results Message -->
+<div id="no-results" class="col-12" style="display: none;">
+    <div class="card">
+        <div class="card-body text-center py-5">
+            <i class="fas fa-search fa-4x text-muted mb-3"></i>
+            <h4 class="text-muted">Nenhum resultado encontrado</h4>
+            <p class="text-muted">Tente ajustar os filtros de busca.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const typeFilter = document.getElementById('filter-type');
+    const severityFilter = document.getElementById('filter-severity');
+    const statusFilter = document.getElementById('filter-status');
+    const alertItems = document.querySelectorAll('.alert-item');
+    const noResultsMessage = document.getElementById('no-results');
+
+    function filterAlerts() {
+        const selectedType = typeFilter.value;
+        const selectedSeverity = severityFilter.value;
+        const selectedStatus = statusFilter.value;
+        
+        let visibleCount = 0;
+
+        alertItems.forEach(item => {
+            let show = true;
+
+            if (selectedType && item.dataset.type !== selectedType) {
+                show = false;
+            }
+
+            if (selectedSeverity && item.dataset.severity !== selectedSeverity) {
+                show = false;
+            }
+
+            if (selectedStatus && item.dataset.status !== selectedStatus) {
+                show = false;
+            }
+
+            item.style.display = show ? 'block' : 'none';
+            if (show) visibleCount++;
+        });
+
+        noResultsMessage.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+
+    typeFilter.addEventListener('change', filterAlerts);
+    severityFilter.addEventListener('change', filterAlerts);
+    statusFilter.addEventListener('change', filterAlerts);
+
+    // Auto-refresh for new alerts
+    setInterval(function() {
+        if (document.hidden) return;
+        
+        fetch('/api/alerts/unacknowledged')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.count > 0) {
+                    // Update badge in navbar
+                    const alertBadge = document.querySelector('.navbar .badge');
+                    if (alertBadge) {
+                        alertBadge.textContent = data.count;
+                        alertBadge.style.display = 'inline';
+                    }
+                }
+            })
+            .catch(error => console.error('Error checking for alerts:', error));
+    }, 30000);
+});
+
+function clearFilters() {
+    document.getElementById('filter-type').value = '';
+    document.getElementById('filter-severity').value = '';
+    document.getElementById('filter-status').value = '';
+    
+    document.querySelectorAll('.alert-item').forEach(item => {
+        item.style.display = 'block';
+    });
+    
+    document.getElementById('no-results').style.display = 'none';
+}
+</script>
+{% endblock %}

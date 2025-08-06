@@ -1,0 +1,427 @@
+/* FastrackGPS - Modern CSS */
+
+:root {
+    --primary-color: #667eea;
+    --secondary-color: #764ba2;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+    --border-radius: 8px;
+    --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+/* Global Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f6fa;
+}
+
+/* Custom Card Styles */
+.card {
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    border-bottom: none;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+/* Status Badges */
+.status-online {
+    background-color: var(--success-color) !important;
+}
+
+.status-offline {
+    background-color: var(--danger-color) !important;
+}
+
+.status-pending {
+    background-color: var(--warning-color) !important;
+}
+
+.status-confirmed {
+    background-color: var(--success-color) !important;
+}
+
+.status-failed {
+    background-color: var(--danger-color) !important;
+}
+
+/* Vehicle Cards */
+.vehicle-card {
+    transition: var(--transition);
+}
+
+.vehicle-card:hover {
+    transform: scale(1.02);
+}
+
+.vehicle-status-indicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.vehicle-status-online {
+    background-color: var(--success-color);
+    animation: pulse-green 2s infinite;
+}
+
+.vehicle-status-offline {
+    background-color: var(--danger-color);
+}
+
+@keyframes pulse-green {
+    0% {
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+    }
+}
+
+/* Alert Styles */
+.alert-card {
+    border-left: 4px solid;
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+}
+
+.alert-critical {
+    border-left-color: #dc3545;
+    background-color: rgba(220, 53, 69, 0.1);
+}
+
+.alert-high {
+    border-left-color: #fd7e14;
+    background-color: rgba(253, 126, 20, 0.1);
+}
+
+.alert-medium {
+    border-left-color: #ffc107;
+    background-color: rgba(255, 193, 7, 0.1);
+}
+
+.alert-low {
+    border-left-color: #17a2b8;
+    background-color: rgba(23, 162, 184, 0.1);
+}
+
+/* Map Styles */
+.map-container {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    position: relative;
+}
+
+.map-controls {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+}
+
+.map-controls .btn {
+    margin-left: 5px;
+    box-shadow: var(--box-shadow);
+}
+
+/* Custom Buttons */
+.btn {
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    border: none;
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-outline-primary {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    border-color: transparent;
+}
+
+/* Form Styles */
+.form-control {
+    border-radius: var(--border-radius);
+    border: 1px solid #e0e6ed;
+    transition: var(--transition);
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.form-select {
+    border-radius: var(--border-radius);
+}
+
+/* Navigation */
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.nav-link {
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.nav-link:hover {
+    transform: translateY(-1px);
+}
+
+/* Statistics Cards */
+.stats-card {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    transition: var(--transition);
+}
+
+.stats-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+}
+
+.stats-card-icon {
+    font-size: 2.5rem;
+    opacity: 0.8;
+}
+
+.stats-card-value {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.stats-card-label {
+    opacity: 0.9;
+    font-size: 0.9rem;
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive Tables */
+.table-responsive {
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.table thead th {
+    border-top: none;
+    background-color: var(--light-color);
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-color);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.5s ease;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --light-color: #2c3e50;
+        --dark-color: #ecf0f1;
+    }
+    
+    body {
+        background-color: #1a1a1a;
+        color: #ecf0f1;
+    }
+    
+    .card {
+        background-color: #2c3e50;
+        color: #ecf0f1;
+    }
+    
+    .table {
+        color: #ecf0f1;
+    }
+    
+    .table thead th {
+        background-color: #34495e;
+        color: #ecf0f1;
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .stats-card {
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+    
+    .btn-group {
+        flex-direction: column;
+    }
+    
+    .btn-group .btn {
+        margin-bottom: 0.5rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .navbar-brand {
+        font-size: 1.25rem;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .navbar,
+    .btn,
+    .pagination {
+        display: none !important;
+    }
+    
+    .card {
+        box-shadow: none;
+        border: 1px solid #dee2e6;
+    }
+    
+    .container-fluid {
+        padding: 0;
+    }
+}
+
+/* Utility Classes */
+.text-gradient {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.bg-gradient {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+}
+
+.shadow-custom {
+    box-shadow: var(--box-shadow);
+}
+
+.border-radius-custom {
+    border-radius: var(--border-radius);
+}
+
+.transition-custom {
+    transition: var(--transition);
+}
+
+/* Leaflet Map Customizations */
+.leaflet-popup-content-wrapper {
+    border-radius: var(--border-radius);
+}
+
+.leaflet-popup-tip {
+    background: white;
+}
+
+.leaflet-control-zoom a {
+    border-radius: var(--border-radius);
+}
+
+.leaflet-bar a:first-child {
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.leaflet-bar a:last-child {
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+}
